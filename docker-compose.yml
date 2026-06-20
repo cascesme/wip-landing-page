@@ -1,0 +1,8 @@
+services:
+  wip:
+    build: .
+    ports:
+      - "8080:80"
+    environment:
+      WIP_TITLE: "My Product — Coming Soon"
+      WIP_SUBTITLE: "We're building something amazing. Check back soon."
