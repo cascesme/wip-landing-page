@@ -18,6 +18,15 @@
       font-family: 'Google Sans', Inter, system-ui, sans-serif;
     }
 
+    /* Star field canvas */
+    #stars {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Gradient blobs — position only, drift handled by JS */
     .blob {
       position: absolute;
       border-radius: 50%;
@@ -28,62 +37,12 @@
       will-change: transform;
     }
 
-    .blob-1 {
-      width: 40vw;
-      height: 40vw;
-      background: #4285F4;
-      top: -10vw;
-      left: -10vw;
-      animation: drift-1 3s ease-in-out infinite alternate;
-    }
+    .blob-1 { width: 40vw; height: 40vw; background: #4285F4; top: -10vw;  left: -10vw;  }
+    .blob-2 { width: 35vw; height: 35vw; background: #EA4335; bottom: -5vw; right: -10vw; }
+    .blob-3 { width: 30vw; height: 30vw; background: #FBBC04; top: 20vh;   right: 20vw;  }
+    .blob-4 { width: 25vw; height: 25vw; background: #34A853; bottom: 10vh; left: 20vw;  }
 
-    .blob-2 {
-      width: 35vw;
-      height: 35vw;
-      background: #EA4335;
-      bottom: -5vw;
-      right: -10vw;
-      animation: drift-2 3.5s ease-in-out infinite alternate;
-    }
-
-    .blob-3 {
-      width: 30vw;
-      height: 30vw;
-      background: #FBBC04;
-      top: 20vh;
-      right: 20vw;
-      animation: drift-3 4.5s ease-in-out infinite alternate;
-    }
-
-    .blob-4 {
-      width: 25vw;
-      height: 25vw;
-      background: #34A853;
-      bottom: 10vh;
-      left: 20vw;
-      animation: drift-4 2.5s ease-in-out infinite alternate;
-    }
-
-    @keyframes drift-1 {
-      from { transform: translate(-60px, 80px)  scale(1);    opacity: 0.12; }
-      to   { transform: translate(80px, -60px)  scale(1.2);  opacity: 0.22; }
-    }
-
-    @keyframes drift-2 {
-      from { transform: translate(70px, 60px)   scale(1);    opacity: 0.12; }
-      to   { transform: translate(-80px, -70px) scale(1.25); opacity: 0.24; }
-    }
-
-    @keyframes drift-3 {
-      from { transform: translate(50px, -70px)  scale(1);    opacity: 0.10; }
-      to   { transform: translate(-70px, 80px)  scale(1.35); opacity: 0.20; }
-    }
-
-    @keyframes drift-4 {
-      from { transform: translate(-50px, -70px) scale(1);    opacity: 0.13; }
-      to   { transform: translate(70px, 50px)   scale(1.15); opacity: 0.22; }
-    }
-
+    /* Entrance animation */
     .container {
       text-align: center;
       z-index: 1;
@@ -93,6 +52,12 @@
       flex-direction: column;
       align-items: center;
       gap: 1.5rem;
+      animation: entrance 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    @keyframes entrance {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0);    }
     }
 
     .illustration {
@@ -114,7 +79,22 @@
 
     @keyframes pulse-ring {
       0%   { transform: scale(0.8); opacity: 0.8; stroke-width: 8px; }
-      100% { transform: scale(1.4); opacity: 0; stroke-width: 1px; }
+      100% { transform: scale(1.4); opacity: 0;   stroke-width: 1px; }
+    }
+
+    /* Glassmorphism card */
+    .glass-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      padding: 2.5rem 3rem;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     }
 
     h1 {
@@ -141,16 +121,18 @@
 
     p {
       font-size: clamp(1rem, 2.5vw, 1.25rem);
-      color: rgba(255,255,255,0.6);
+      color: rgba(255, 255, 255, 0.55);
       line-height: 1.6;
-      max-width: 42rem;
+      max-width: 36rem;
     }
+
+    /* Click bubble */
     .click-bubble {
       position: fixed;
       border-radius: 50%;
       pointer-events: none;
       transform: translate(-50%, -50%) scale(0);
-      animation: bubble-pop 1s ease-out forwards;
+      animation: bubble-pop 0.5s ease-out forwards;
       z-index: 999;
     }
 
@@ -162,14 +144,16 @@
   </style>
 </head>
 <body>
+  <canvas id="stars"></canvas>
+
   <!-- Gradient blobs -->
-  <div class="blob blob-1"></div>
-  <div class="blob blob-2"></div>
-  <div class="blob blob-3"></div>
-  <div class="blob blob-4"></div>
+  <div class="blob blob-1" id="b1"></div>
+  <div class="blob blob-2" id="b2"></div>
+  <div class="blob blob-3" id="b3"></div>
+  <div class="blob blob-4" id="b4"></div>
 
   <div class="container">
-    <!-- SVG Illustration -->
+    <!-- Rocket SVG -->
     <svg class="illustration" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="rocketBody" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -185,57 +169,106 @@
           <stop offset="100%" stop-color="#FBBC04" stop-opacity="0"/>
         </linearGradient>
       </defs>
-
-      <!-- Stars -->
       <circle cx="40"  cy="45"  r="2"   fill="white" opacity="0.5"/>
       <circle cx="160" cy="35"  r="1.5" fill="white" opacity="0.4"/>
       <circle cx="158" cy="90"  r="2"   fill="white" opacity="0.3"/>
       <circle cx="35"  cy="105" r="1.5" fill="white" opacity="0.4"/>
       <circle cx="170" cy="128" r="1"   fill="white" opacity="0.3"/>
       <circle cx="28"  cy="148" r="2"   fill="white" opacity="0.3"/>
-
-      <!-- Flame -->
       <path d="M 87,142 Q 89,170 100,182 Q 111,170 113,142 Z" fill="url(#flameOuter)"/>
       <path d="M 93,142 Q 95,160 100,168 Q 105,160 107,142 Z" fill="url(#flameInner)"/>
-
-      <!-- Left fin -->
       <path d="M 87,108 L 58,142 L 87,142 Z" fill="#EA4335"/>
       <path d="M 87,108 L 66,133 L 87,133 Z" fill="#c5221f" opacity="0.35"/>
-
-      <!-- Right fin -->
       <path d="M 113,108 L 142,142 L 113,142 Z" fill="#EA4335"/>
       <path d="M 113,108 L 134,133 L 113,133 Z" fill="#c5221f" opacity="0.35"/>
-
-      <!-- Rocket body -->
       <path d="M 87,138 L 87,72 Q 87,20 100,13 Q 113,20 113,72 L 113,138 Z" fill="url(#rocketBody)"/>
-
-      <!-- Body highlight -->
       <path d="M 87,138 L 87,72 Q 87,20 100,13 L 100,138 Z" fill="white" opacity="0.07"/>
-
-      <!-- Thruster base -->
       <rect x="87" y="132" width="26" height="10" rx="3" fill="#1557b0"/>
-
-      <!-- Green side stripes -->
       <rect x="87" y="95" width="4" height="22" rx="2" fill="#34A853" opacity="0.8"/>
       <rect x="109" y="95" width="4" height="22" rx="2" fill="#34A853" opacity="0.8"/>
-
-      <!-- Window ring -->
       <circle cx="100" cy="70" r="17" fill="white" opacity="0.12"/>
-      <!-- Window -->
       <circle cx="100" cy="70" r="13" fill="white" opacity="0.92"/>
       <circle cx="100" cy="70" r="9"  fill="#4285F4" opacity="0.45"/>
-      <!-- Window highlight -->
       <circle cx="95"  cy="65" r="3.5" fill="white" opacity="0.75"/>
-
-      <!-- Pulse ring -->
       <circle class="pulse-ring" cx="100" cy="70" r="18" fill="none" stroke="#4285F4" stroke-width="2"/>
     </svg>
 
-    <h1>$WIP_TITLE</h1>
-    <div class="accent-bar"></div>
-    <p>$WIP_SUBTITLE</p>
+    <div class="glass-card">
+      <h1>$WIP_TITLE</h1>
+      <div class="accent-bar"></div>
+      <p>$WIP_SUBTITLE</p>
+    </div>
   </div>
+
   <script>
+    // --- Star field ---
+    const canvas = document.getElementById('stars');
+    const ctx = canvas.getContext('2d');
+    const N = 120;
+    const stars = [];
+
+    function resize() {
+      canvas.width  = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    for (let i = 0; i < N; i++) {
+      stars.push({
+        x: Math.random() * window.innerWidth,
+        y: Math.random() * window.innerHeight,
+        r: Math.random() * 1.2 + 0.2,
+        speed: Math.random() * 0.3 + 0.05,
+        opacity: Math.random() * 0.5 + 0.1,
+      });
+    }
+
+    function drawStars() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (const s of stars) {
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${s.opacity})`;
+        ctx.fill();
+        s.y -= s.speed;
+        if (s.y < -2) { s.y = canvas.height + 2; s.x = Math.random() * canvas.width; }
+      }
+    }
+
+    // --- Blob parallax + drift ---
+    const blobs = [
+      { el: document.getElementById('b1'), ampX: 70, ampY: 60, period: 5000,  pX: 35, pY: 25, phase: 0 },
+      { el: document.getElementById('b2'), ampX: 80, ampY: 70, period: 6500,  pX: 28, pY: 32, phase: 1.8 },
+      { el: document.getElementById('b3'), ampX: 65, ampY: 75, period: 8000,  pX: 22, pY: 20, phase: 3.5 },
+      { el: document.getElementById('b4'), ampX: 55, ampY: 60, period: 4500,  pX: 30, pY: 28, phase: 5.1 },
+    ];
+
+    let mx = 0, my = 0, smx = 0, smy = 0;
+    document.addEventListener('mousemove', e => {
+      mx = (e.clientX / window.innerWidth  - 0.5) * 2;
+      my = (e.clientY / window.innerHeight - 0.5) * 2;
+    });
+
+    function tick(t) {
+      // Smooth mouse lerp
+      smx += (mx - smx) * 0.06;
+      smy += (my - smy) * 0.06;
+
+      for (const b of blobs) {
+        const angle = (t / b.period) * Math.PI * 2 + b.phase;
+        const tx = Math.sin(angle) * b.ampX + smx * b.pX;
+        const ty = Math.cos(angle * 0.7) * b.ampY + smy * b.pY;
+        const sc = 1 + Math.sin(angle * 0.5) * 0.15;
+        b.el.style.transform = `translate(${tx}px,${ty}px) scale(${sc})`;
+      }
+
+      drawStars();
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+
+    // --- Click bubbles ---
     const gradients = [
       'radial-gradient(circle, #4285F4aa, #4285F400)',
       'radial-gradient(circle, #EA4335aa, #EA433500)',
@@ -248,7 +281,7 @@
       b.className = 'click-bubble';
       b.style.cssText = `left:${e.clientX}px;top:${e.clientY}px;width:300px;height:300px;background:${gradients[gi++ % gradients.length]}`;
       document.body.appendChild(b);
-      setTimeout(() => b.remove(), 1000);
+      setTimeout(() => b.remove(), 500);
     });
   </script>
 </body>
