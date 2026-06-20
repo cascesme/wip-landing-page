@@ -39,10 +39,11 @@ jobs:
 
           LATEST=$(gh release list \
             --repo "$GITHUB_REPOSITORY" \
-            --limit 1 \
+            --limit 100 \
             --json tagName \
-            --jq '.[0].tagName // ""' 2>/dev/null || echo "")
+            --jq '[.[].tagName | select(test("^[0-9]+\\.[0-9]+\\.[0-9]+$"))] | sort_by(split(".") | map(tonumber)) | last // ""' 2>/dev/null || echo "")
 
+          if [ "$LATEST" = "latest" ]; then LATEST=""; fi
           if [ -z "$LATEST" ]; then
             case "${{ inputs.bump }}" in
               major) NEXT="1.0.0" ;;
