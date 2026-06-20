@@ -9,111 +9,140 @@
 
     body {
       min-height: 100vh;
-      background: #050505;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: 'Google Sans', Inter, system-ui, sans-serif;
       overflow: hidden;
       position: relative;
+      background: #050505;
+      font-family: 'Google Sans', Inter, system-ui, sans-serif;
     }
 
     .blob {
-      position: fixed;
+      position: absolute;
       border-radius: 50%;
       filter: blur(80px);
       opacity: 0.15;
+      z-index: -1;
       pointer-events: none;
     }
-    .blob-blue  { width: 600px; height: 600px; background: #4285F4; top: -150px; left: -200px; }
-    .blob-red   { width: 400px; height: 400px; background: #EA4335; bottom: -100px; right: -100px; }
-    .blob-yellow{ width: 300px; height: 300px; background: #FBBC04; bottom: 80px; left: 80px; opacity: 0.1; }
+
+    .blob-1 {
+      width: 40vw;
+      height: 40vw;
+      background: #4285F4;
+      top: -10vw;
+      left: -10vw;
+    }
+
+    .blob-2 {
+      width: 35vw;
+      height: 35vw;
+      background: #EA4335;
+      bottom: -5vw;
+      right: -10vw;
+    }
+
+    .blob-3 {
+      width: 30vw;
+      height: 30vw;
+      background: #FBBC04;
+      top: 20vh;
+      right: 20vw;
+    }
+
+    .blob-4 {
+      width: 25vw;
+      height: 25vw;
+      background: #34A853;
+      bottom: 10vh;
+      left: 20vw;
+    }
 
     .container {
       text-align: center;
       z-index: 1;
       padding: 2rem;
       max-width: 600px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
     }
 
     .illustration {
       width: 200px;
       height: 200px;
-      margin: 0 auto 2.5rem;
       animation: float 3s ease-in-out infinite;
     }
 
+    .pulse-ring {
+      animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+      transform-origin: center;
+    }
+
     @keyframes float {
-      0%, 100% { transform: translateY(0px); }
-      50%       { transform: translateY(-12px); }
+      0%   { transform: translateY(0px); }
+      50%  { transform: translateY(-15px); }
+      100% { transform: translateY(0px); }
     }
 
     @keyframes pulse-ring {
-      0%   { transform: scale(0.9); opacity: 0.6; }
-      100% { transform: scale(1.15); opacity: 0; }
+      0%   { transform: scale(0.8); opacity: 0.8; stroke-width: 8px; }
+      100% { transform: scale(1.4); opacity: 0; stroke-width: 1px; }
     }
 
-    .pulse-ring { animation: pulse-ring 2s ease-out infinite; transform-origin: center; }
-
     h1 {
-      font-size: clamp(2rem, 5vw, 3.5rem);
-      font-weight: 700;
-      color: #ffffff;
-      letter-spacing: -0.02em;
+      font-size: clamp(2rem, 5vw, 4.5rem);
+      font-weight: 600;
+      color: #e5e2e1;
+      letter-spacing: -0.04em;
       line-height: 1.1;
-      margin-bottom: 0.5rem;
     }
 
     .accent-bar {
-      width: 80px;
+      width: 96px;
       height: 3px;
+      border-radius: 9999px;
       background: linear-gradient(90deg, #4285F4, #EA4335, #FBBC04, #34A853);
-      border-radius: 2px;
-      margin: 1rem auto 1.5rem;
     }
 
     p {
-      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      font-size: clamp(1rem, 2.5vw, 1.25rem);
       color: rgba(255,255,255,0.6);
       line-height: 1.6;
+      max-width: 42rem;
     }
   </style>
 </head>
 <body>
-  <div class="blob blob-blue"></div>
-  <div class="blob blob-red"></div>
-  <div class="blob blob-yellow"></div>
+  <!-- Gradient blobs -->
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+  <div class="blob blob-4"></div>
 
   <div class="container">
-    <svg class="illustration" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <!-- Pulse ring -->
-      <circle class="pulse-ring" cx="100" cy="100" r="90" stroke="#4285F4" stroke-width="2" fill="none" opacity="0.3"/>
-      <!-- Outer circle -->
-      <circle cx="100" cy="100" r="80" fill="#0d0d0d" stroke="#4285F4" stroke-width="1.5" opacity="0.4"/>
-      <!-- Hard hat brim -->
-      <ellipse cx="100" cy="98" rx="44" ry="10" fill="#F5A623"/>
-      <!-- Hard hat dome -->
-      <ellipse cx="100" cy="88" rx="32" ry="22" fill="#FBBC04"/>
-      <!-- Hat highlight -->
-      <ellipse cx="100" cy="84" rx="20" ry="8" fill="#FFD54F" opacity="0.5"/>
-      <!-- Wrench handle -->
-      <rect x="90" y="115" width="7" height="28" rx="3.5" fill="#34A853" transform="rotate(-25 90 115)"/>
-      <!-- Wrench head -->
-      <circle cx="85" cy="113" r="9" fill="none" stroke="#34A853" stroke-width="4"/>
-      <!-- Gear outer -->
-      <circle cx="120" cy="132" r="11" fill="none" stroke="#4285F4" stroke-width="3"/>
-      <!-- Gear center -->
-      <circle cx="120" cy="132" r="4" fill="#4285F4"/>
-      <!-- Gear teeth -->
-      <rect x="118" y="118" width="4" height="6" rx="1" fill="#4285F4"/>
-      <rect x="118" y="140" width="4" height="6" rx="1" fill="#4285F4"/>
-      <rect x="106" y="130" width="6" height="4" rx="1" fill="#4285F4"/>
-      <rect x="128" y="130" width="6" height="4" rx="1" fill="#4285F4"/>
-      <!-- Sparkle dots -->
-      <circle cx="58" cy="68" r="4" fill="#EA4335" opacity="0.8"/>
-      <circle cx="148" cy="63" r="3" fill="#34A853" opacity="0.8"/>
-      <circle cx="158" cy="115" r="3" fill="#FBBC04" opacity="0.8"/>
-      <circle cx="48" cy="130" r="3" fill="#4285F4"  opacity="0.8"/>
+    <!-- SVG Illustration -->
+    <svg class="illustration" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="gradYellow" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#FBBC04"/>
+          <stop offset="100%" stop-color="#F9AB00"/>
+        </linearGradient>
+      </defs>
+      <!-- Pulse Outer Ring -->
+      <circle class="pulse-ring" cx="100" cy="100" r="80" fill="none" stroke="#4285F4"/>
+      <!-- Base Structure -->
+      <path d="M40 140 Q100 180 160 140 L150 160 Q100 190 50 160 Z" fill="#34A853" opacity="0.8"/>
+      <!-- Hard Hat Main -->
+      <path d="M50 120 C50 60, 150 60, 150 120 Z" fill="url(#gradYellow)"/>
+      <!-- Hat Brim -->
+      <path d="M30 120 Q100 140 170 120 L160 130 Q100 150 40 130 Z" fill="#EA4335"/>
+      <!-- Abstract Accents -->
+      <circle cx="100" cy="80" r="15" fill="#4285F4" opacity="0.9"/>
+      <circle cx="130" cy="95" r="8" fill="#ffffff" opacity="0.8"/>
+      <rect x="85" y="55" width="30" height="8" rx="4" fill="#131313" opacity="0.3"/>
     </svg>
 
     <h1>$WIP_TITLE</h1>
