@@ -25,6 +25,7 @@
       opacity: 0.15;
       z-index: -1;
       pointer-events: none;
+      will-change: transform;
     }
 
     .blob-1 {
@@ -33,6 +34,7 @@
       background: #4285F4;
       top: -10vw;
       left: -10vw;
+      animation: drift-1 3s ease-in-out infinite alternate;
     }
 
     .blob-2 {
@@ -41,6 +43,7 @@
       background: #EA4335;
       bottom: -5vw;
       right: -10vw;
+      animation: drift-2 3.5s ease-in-out infinite alternate;
     }
 
     .blob-3 {
@@ -49,6 +52,7 @@
       background: #FBBC04;
       top: 20vh;
       right: 20vw;
+      animation: drift-3 4.5s ease-in-out infinite alternate;
     }
 
     .blob-4 {
@@ -57,6 +61,27 @@
       background: #34A853;
       bottom: 10vh;
       left: 20vw;
+      animation: drift-4 2.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes drift-1 {
+      from { transform: translate(-60px, 80px)  scale(1);    opacity: 0.12; }
+      to   { transform: translate(80px, -60px)  scale(1.2);  opacity: 0.22; }
+    }
+
+    @keyframes drift-2 {
+      from { transform: translate(70px, 60px)   scale(1);    opacity: 0.12; }
+      to   { transform: translate(-80px, -70px) scale(1.25); opacity: 0.24; }
+    }
+
+    @keyframes drift-3 {
+      from { transform: translate(50px, -70px)  scale(1);    opacity: 0.10; }
+      to   { transform: translate(-70px, 80px)  scale(1.35); opacity: 0.20; }
+    }
+
+    @keyframes drift-4 {
+      from { transform: translate(-50px, -70px) scale(1);    opacity: 0.13; }
+      to   { transform: translate(70px, 50px)   scale(1.15); opacity: 0.22; }
     }
 
     .container {
@@ -104,7 +129,14 @@
       width: 96px;
       height: 3px;
       border-radius: 9999px;
-      background: linear-gradient(90deg, #4285F4, #EA4335, #FBBC04, #34A853);
+      background: linear-gradient(90deg, #4285F4, #EA4335, #FBBC04, #34A853, #4285F4);
+      background-size: 200% 100%;
+      animation: gradient-slide 4s linear infinite;
+    }
+
+    @keyframes gradient-slide {
+      0%   { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
     }
 
     p {
